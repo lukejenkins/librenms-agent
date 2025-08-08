@@ -7,9 +7,10 @@
 # Alternatively you can put them in $0.conf, meaning if you've named
 # this script ntpsec-client.sh then it must go in ntpsec-client.sh.conf .
 #
-# Cloned from ntp-server.sh from the librenms-agent project. 
+# Cloned from ntp-server.sh from the librenms-agent project.
+# At the time I cloned it, contributors for that script included:
+# @crcro, @VVelox, @SourceDoctor, @Jellyfrog with comments from @laf. 
 # Outputs from ntpsec version of the commands are different in a number of ways.
-#
 
 CONFIGFILE=/etc/snmp/ntpsec-server.conf
 
@@ -36,6 +37,7 @@ if [ -f "$CONFIG" ]; then
 	# shellcheck disable=SC1090
 	. "$CONFIG"
 fi
+
 VERSION=1
 
 # Old command:
@@ -59,16 +61,15 @@ CLK_JITTER=$(echo $NTPQ_RAW | $BIN_AWK -v RS="[ ,]+" -F "[=, ]+" '/clk_jitter/{p
 # shellcheck disable=SC2086
 CLK_WANDER=$(echo $NTPQ_RAW | $BIN_AWK -v RS="[ ,]+" -F "[=, ]+" '/clk_wander/{print $2}')
 
-echo $NTPQ_RAW
-echo $STRATUM
-echo $OFFSET
-echo $FREQUENCY
-echo $SYS_JITTER
-echo $CLK_JITTER
-echo $CLK_WANDER
+#echo $NTPQ_RAW
+#echo $STRATUM
+#echo $OFFSET
+#echo $SYS_JITTER
+#echo $CLK_JITTER
+#echo $CLK_WANDER
 
 USECMD=$(echo "$BIN_NTPQ" -c iostats 127.0.0.1)
-fi
+
 CMD2=$($USECMD | $BIN_TR -d ' ' | $BIN_CUT -d : -f 2 | $BIN_TR '\n' ' ')
 
 # shellcheck disable=SC2086
